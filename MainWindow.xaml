@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Label x:Name="Log"   
+         Foreground="Gainsboro"                           
+         FontSize="13" 
+         ScrollViewer.HorizontalScrollBarVisibility="Auto"
+         ScrollViewer.VerticalScrollBarVisibility="Auto"
+         ScrollViewer.CanContentScroll="True"
+         Margin="40,0,343,141" Background="#FF0E0909"
+         VerticalAlignment="Bottom" Height="283" Initialized="Log_Initialized"/>
+        <TextBox HorizontalAlignment="Left" Height="19" Margin="91,333,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="243"/>
+        <Label Content="Enter Command" HorizontalAlignment="Left" Margin="75,307,0,0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Height="312" Margin="528,40,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="240"/>
 
     </Grid>
 </Window>
