@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
+
 namespace MUD_client
 {
     /// <summary>
@@ -23,10 +25,15 @@ namespace MUD_client
     public partial class MainWindow : Window
     {
         private Label LogManager;
+        public Socket senderManager;
+        private static Label EncounterManager;
+        private static Label KillManager;
+        private static Label DungeonManager;
         public MainWindow()
         {
             InitializeComponent();
-           
+            StartClient(LogManager);
+
         }
         public static void StartClient(Label Log)
         {
@@ -38,37 +45,31 @@ namespace MUD_client
                 // Get Host IP Address that is used to establish a connection
                 // In this case, we get one IP address of localhost that is IP : 127.0.0.1
                 // If a host has multiple addresses, you will get a list of addresses
-                IPHostEntry host = Dns.GetHostEntry("localhost");
-                IPAddress ipAddress = host.AddressList[0];
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+                //IPHostEntry host = Dns.GetHostEntry("localhost");
+                //IPAddress ipAddress = host.AddressList[0];
+                //IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
                 // Create a TCP/IP  socket.
-                Socket sender = new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);
-
+                Socket sender = Connecter.StartConnection();
                 // Connect the socket to the remote endpoint. Catch any errors.
                 try
                 {
                     // Connect to Remote EndPoint
-                    sender.Connect(remoteEP);
-
-                    Log.Content = Log.Content + "Socket connected to { 0}"+ sender.RemoteEndPoint.ToString();
+                    Log.Content = Log.Content + "Socket connected to { 0}" + Connecter.connect(sender);
 
 
-                    // Encode the data string into a byte array.
-                    byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
-
-                    // Send the data through the socket.
-                    int bytesSent = sender.Send(msg);
+                    Connecter.SendData(sender, "Request");
 
                     // Receive the response from the remote device.
-                    int bytesRec = sender.Receive(bytes);
-                    Console.WriteLine("Echoed test = {0}",
-                        Encoding.ASCII.GetString(bytes, 0, bytesRec));
 
-                    // Release the socket.
-                    sender.Shutdown(SocketShutdown.Both);
-                    sender.Close();
+                    
+                    String stats= Connecter.recieveData(sender);
+                    Log.Content = Log.Content+ "\nEchoed test = {0}"+ stats;
+
+                    DungeonManager.Content= String.Concat(stats[0], stats[1]);
+                    KillManager.Content=String.Concat(stats[3], stats[4]);
+                    EncounterManager.Content = String.Concat(stats[6],stats[7]);
+
 
                 }
                 catch (ArgumentNullException ane)
@@ -95,8 +96,45 @@ namespace MUD_client
         {
            Log.VerticalAlignment = VerticalAlignment.Bottom;
            Log.VerticalContentAlignment = VerticalAlignment.Bottom;
-           Log.Content = Log.Content + "\ntest";
-           StartClient(Log);
+           //Log.Content = Log.Content + "\ntest";
+           LogManager = Log;
+        }
+
+        private void End_connection_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Release the socket.
+                senderManager.Shutdown(SocketShutdown.Both);
+                senderManager.Close();
+            }
+            catch (Exception ex)
+            {
+                LogManager.Content=Log.Content + "/n" +ex.ToString();
+            }
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Encounters_count_Initialized(object sender, EventArgs e)
+        {
+            Encounters_count.Content = 0;
+            EncounterManager = Encounters_count;
+        }
+
+        private void Kill_count_Initialized(object sender, EventArgs e)
+        {
+            Kill_count.Content = 0;
+            KillManager = Kill_count;
+        }
+
+        private void Dungeon_count_Initialized(object sender, EventArgs e)
+        {
+            Dungeon_count.Content = 0;
+            DungeonManager = Dungeon_count; //if both objects can be mirrored what happens to one happens to another
         }
     }
 }
