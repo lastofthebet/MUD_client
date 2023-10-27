@@ -17,7 +17,13 @@
          VerticalAlignment="Bottom" Height="283" Initialized="Log_Initialized"/>
         <TextBox HorizontalAlignment="Left" Height="19" Margin="91,333,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="243"/>
         <Label Content="Enter Command" HorizontalAlignment="Left" Margin="75,307,0,0" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Height="312" Margin="528,40,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="240"/>
+        <Button Content="Refresh" HorizontalAlignment="Left" Margin="469,328,0,0" VerticalAlignment="Top"/>
+        <Label Content="Monsters killed" HorizontalAlignment="Left" Margin="537,70,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Kill_count" Content="" HorizontalAlignment="Left" Margin="666,70,0,0" VerticalAlignment="Top"/>
+        <Label Content="Dungeons delved" HorizontalAlignment="Left" Margin="537,126,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Dungeon_count" Content="" HorizontalAlignment="Left" Margin="671,126,0,0" VerticalAlignment="Top"/>
+        <Label Content="Encounters" HorizontalAlignment="Left" Margin="537,191,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Encounters_count" Content="Label" HorizontalAlignment="Left" Margin="676,191,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

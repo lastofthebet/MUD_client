@@ -22,81 +22,81 @@ namespace MUD_client
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Label LogManager;
         public MainWindow()
         {
             InitializeComponent();
-           // StartClient();
+           
         }
-        //public static void StartClient()
-        //{
-        //    byte[] bytes = new byte[1024];
-        //    TextBox Log = new TextBox();
-            
-        //    try
-        //    {
-        //        // Connect to a Remote server
-        //        // Get Host IP Address that is used to establish a connection
-        //        // In this case, we get one IP address of localhost that is IP : 127.0.0.1
-        //        // If a host has multiple addresses, you will get a list of addresses
-        //        IPHostEntry host = Dns.GetHostEntry("localhost");
-        //        IPAddress ipAddress = host.AddressList[0];
-        //        IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+        public static void StartClient(Label Log)
+        {
+            byte[] bytes = new byte[1024];
 
-        //        // Create a TCP/IP  socket.
-        //        Socket sender = new Socket(ipAddress.AddressFamily,
-        //            SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                // Connect to a Remote server
+                // Get Host IP Address that is used to establish a connection
+                // In this case, we get one IP address of localhost that is IP : 127.0.0.1
+                // If a host has multiple addresses, you will get a list of addresses
+                IPHostEntry host = Dns.GetHostEntry("localhost");
+                IPAddress ipAddress = host.AddressList[0];
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
-        //        // Connect the socket to the remote endpoint. Catch any errors.
-        //        try
-        //        {
-        //            // Connect to Remote EndPoint
-        //            sender.Connect(remoteEP);
+                // Create a TCP/IP  socket.
+                Socket sender = new Socket(ipAddress.AddressFamily,
+                    SocketType.Stream, ProtocolType.Tcp);
 
-        //            Form.Text.Append(("Socket connected to { 0}", sender.RemoteEndPoint.ToString()));
-                    
+                // Connect the socket to the remote endpoint. Catch any errors.
+                try
+                {
+                    // Connect to Remote EndPoint
+                    sender.Connect(remoteEP);
 
-        //            // Encode the data string into a byte array.
-        //            byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
+                    Log.Content = Log.Content + "Socket connected to { 0}"+ sender.RemoteEndPoint.ToString();
 
-        //            // Send the data through the socket.
-        //            int bytesSent = sender.Send(msg);
 
-        //            // Receive the response from the remote device.
-        //            int bytesRec = sender.Receive(bytes);
-        //            Console.WriteLine("Echoed test = {0}",
-        //                Encoding.ASCII.GetString(bytes, 0, bytesRec));
+                    // Encode the data string into a byte array.
+                    byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
 
-        //            // Release the socket.
-        //            sender.Shutdown(SocketShutdown.Both);
-        //            sender.Close();
+                    // Send the data through the socket.
+                    int bytesSent = sender.Send(msg);
 
-        //        }
-        //        catch (ArgumentNullException ane)
-        //        {
-        //            Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-        //        }
-        //        catch (SocketException se)
-        //        {
-        //            Console.WriteLine("SocketException : {0}", se.ToString());
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine("Unexpected exception : {0}", e.ToString());
-        //        }
+                    // Receive the response from the remote device.
+                    int bytesRec = sender.Receive(bytes);
+                    Console.WriteLine("Echoed test = {0}",
+                        Encoding.ASCII.GetString(bytes, 0, bytesRec));
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.ToString());
-        //    }
-        //}
+                    // Release the socket.
+                    sender.Shutdown(SocketShutdown.Both);
+                    sender.Close();
+
+                }
+                catch (ArgumentNullException ane)
+                {
+                    Log.Content = Log.Content + "\nArgumentNullException : {0}"+ ane.ToString();
+                }
+                catch (SocketException se)
+                {
+                    Log.Content = Log.Content + "\nSocketException : {0}" + se.ToString();
+                }
+                catch (Exception e)
+                {
+                    Log.Content = Log.Content + "\nUnexpected exception : {0}" + e.ToString();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log.Content = Log.Content + "\n" + e.ToString();
+            }
+        }
 
         private void Log_Initialized(object sender, EventArgs e)
         {
            Log.VerticalAlignment = VerticalAlignment.Bottom;
            Log.VerticalContentAlignment = VerticalAlignment.Bottom;
            Log.Content = Log.Content + "\ntest";
-           
+           StartClient(Log);
         }
     }
 }
